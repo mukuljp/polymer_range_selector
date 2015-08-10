@@ -1,0 +1,144 @@
+<link rel="import"
+      href="bower_components/polymer/polymer.html">
+
+
+<dom-module id="editable-name-tag" attributes="range">
+    
+    <template>
+        <link rel="stylesheet" href="range.css">
+        <div class="sec-row">
+
+            <section class="feature-col">
+                
+                <div class="fea-opt-row clearfix" id="fea_row">
+                    <ul class="clearfix" id="input_wrapper">
+
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+    </template>
+
+    <script>
+        var element_count = 0;
+        Polymer({
+            is: "editable-name-tag",
+            properties: {
+                owner: {
+                    type: String,
+                    value: "Daniel"
+                },
+              
+                input: Number,
+                
+                
+            },
+             range_total:Number,
+            value:Number,
+            ready: function () {
+                if (this.input != undefined)
+                    this.range_total.value = this.input;
+                else {
+                    this.range_total.value = 5;
+                }
+                var input_container = Polymer.dom(this.$.input_wrapper);
+                while (input_container.firstChild) {
+                    input_container.removeChild(input_container.firstChild);
+                }
+                var j = 1;
+                var total = this.range_total.value;
+                for (var i = total; i >= 2; i--) {
+                    this.generateInput(i, j, "normal");
+                    j++;
+                }
+                this.generateInput(1, j, "middle");
+                for (i = 2; i <= total; i++) {
+                    j++;
+                    this.generateInput(i*-1, j, "normal");
+                }
+                element_count++;
+                /*var activeline=document.createElement("li");
+                 activeline.setAttribute("class","active-line");
+                 var input_container = Polymer.dom(this.$.input_wrapper);
+                 input_container.appendChild(activeline);*/
+
+            }
+            , generateInput: function (curr_val, curr_count, type) {
+                var toLocal, inputel, labelel, text, spanel;
+                var input_container = Polymer.dom(this.$.input_wrapper);
+                toLocal = document.createElement('li');
+                if (type == "middle")
+                    toLocal.setAttribute("class", "mdl-point");
+                inputel = document.createElement('input');
+                labelel = document.createElement('label');
+                inputel.setAttribute("name", "radio-opt_" + element_count);
+                inputel.setAttribute("value", curr_val);
+                inputel.setAttribute("type", "radio");
+                inputel.addEventListener("click", this.handleInput.bind(this));
+                toLocal.appendChild(inputel);
+                toLocal.appendChild(labelel);
+                inputel.setAttribute("id", "opt-" + curr_count + "_" + element_count);
+                labelel.setAttribute("for", "opt-" + curr_count + "_" + element_count);
+                if (type == "middle")
+                    text = document.createTextNode(1);
+                else
+                    text = document.createTextNode(curr_val<0?curr_val*-1:curr_val);
+                spanel = document.createElement('span');
+                spanel.appendChild(text);
+                labelel.appendChild(spanel);
+                if (type == "middle") {
+                    spanel = document.createElement('span');
+                    text = document.createTextNode("Equal");
+                    spanel.appendChild(text);
+                    labelel.appendChild(spanel)
+                }
+                toLocal.appendChild(inputel);
+                toLocal.appendChild(labelel);
+                input_container.appendChild(toLocal);
+            }
+
+            , handleInput: function () {
+                var wrap = $(this);
+                
+                this.value=(wrap.find("input[type='radio']:checked").val());
+                
+                var elm = wrap
+                //console.log(elm.find(".active-line"));
+                var activeLine = elm.find(".active-line");
+                var mdlPoint = elm.find(".mdl-point");
+                var mdlPointPos = {x: mdlPoint.position().left, y: mdlPoint.position().top};
+                console.log(mdlPointPos);
+                var activePoint = elm.find("input[type='radio']:checked").closest('li');
+                var activePointPos = {x: activePoint.position().left, y: activePoint.position().top};
+                console.log(activePointPos);
+                var diff = {x: (parseInt(activePointPos.x) - parseInt(mdlPointPos.x)), y: (parseInt(activePointPos.y) - parseInt(mdlPointPos.y))}
+                console.log(activePointPos.x);
+                // activeLine.width(Math.abs(activePointPos.x));
+                elm.find('li').removeClass('range');
+                if (diff.x < 0) {
+                    //activeLine.css('margin-left', diff.x + 'px');
+                    activePoint.nextUntil(mdlPoint).addClass("range");
+                }
+                else if (diff.x > 0) {
+                    //activeLine.css('margin-left', '0px');
+                    mdlPoint.nextUntil(activePoint).addClass("range");
+                }
+
+            },
+            total_changed: function () {
+                //this.ready();
+            },
+            val:function(){
+                if (typeof this.value =='function')
+                return 1;
+            else
+                return this.value;
+            }
+
+
+
+        });
+    </script>
+
+</dom-module>
