@@ -1,9 +1,8 @@
 # polymer_range_selector
 My experiments with polymer
-* This is just an experimental project made with google polymer polymer . Please do not use this for production purpose.
+* This is just an experimental project made with google polymer . Please do not use this for production purpose.
 * web component built using polymer ,which can be used for range selection,comparing  items.
 * Demo - http://mukuljp.github.io/polymer_range_selector/
-* Design and effects Used is  Developed  by Umesh M @ Fingent Technology Solutions
-* Developed @ Fingent Technology Solutions
+
  
 
